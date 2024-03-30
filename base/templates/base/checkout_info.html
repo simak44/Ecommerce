@@ -1,0 +1,69 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block content %}
+<!-- BEGIN #checkout-payment -->
+        <div class="section-container" id="checkout-info">
+            <!-- BEGIN container -->
+            <div class="container">
+                <!-- BEGIN checkout -->
+                <div class="checkout">
+                    <form  method="POST" name="form_shipping" class="form-horizontal">
+                       {% include "base/checkoutheader.html" %}
+                        <!-- BEGIN checkout-body -->
+                        {% csrf_token %}
+                        <div class="checkout-body">
+                            {%for item in form %}
+                            <div class="form-group">
+                                <label class="control-label col-md-4">
+                                    {{item.label_tag}} <span class="text-danger">*</span>
+                                </label>
+                                <div class="col-md-4">
+                                   {{item}}
+                                </div>
+                            </div>
+                            {% endfor %}
+                            <div class="form-group">
+                                <label class="control-label col-md-4">
+                                    &nbsp;
+                                </label>
+                                <div class="col-md-4">
+                                    <label class="f-w-500">
+                                        <input type="checkbox" name="business_address" value="1" />
+                                        This is a business address
+                                        <a href="#" class="m-l-5 text-muted" data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="This helps us choose the best shipping method for you. Business shipments are normally delivered on weekdays by 5:00 p.m. local time. Residential shipments are normally delivered Monday - Saturday by 8:00 p.m. local time.">
+                                            <i class="fa fa-question-circle"></i>
+                                        </a>
+                                    </label>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="m-b-5"><b>Shipping Policy</b></div>
+                            <ul class="checkout-info-list">
+                                <li>Signature may be required for delivery</li>
+                                <li>We do not ship to P.O. boxes</li>
+                                <li>Delivery estimates below include item preparation and shipping time</li>
+                                <li>We do not ship directly to APO/FPO addresses.</li>
+                            </ul>
+                            
+                        </div>
+                        <!-- END checkout-body -->
+                        <!-- BEGIN checkout-footer -->
+                        <div class="checkout-footer">
+                            <a href="{% url 'checkoutinfo' %}" class="btn btn-white btn-lg pull-left">Back</a>
+                            {% comment %} <button type="submit" class="btn btn-inverse btn-lg p-l-30 p-r-30 m-l-10">Continue</button> {% endcomment %}
+                            <a href="{% url 'payment' %}" class="btn btn-inverse btn-lg p-l-30 p-r-30 m-l-10">Next</a>
+                            {% comment %} <input type="submit" value="Next" class="btn btn-inverse btn-lg p-l-30 p-r-30 m-l-10"> {% endcomment %}
+                            {% comment %} <form action={% url 'createcheckoutsession' %} method="POST">
+                                {% csrf_token %}
+                                <button type="submit" id="checkout-button" class="btn btn-inverse btn-lg p-l-30 p-r-30 m-l-10">Checkout</button>
+                              </form> {% endcomment %}
+                        </div> 
+                        <!-- END checkout-footer -->
+                    </form>
+                </div>
+                <!-- END checkout -->
+            </div>
+            <!-- END container -->
+        </div>
+        <!-- END #checkout-info -->
+{% endblock content %}

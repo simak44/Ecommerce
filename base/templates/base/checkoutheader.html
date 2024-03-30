@@ -1,0 +1,67 @@
+        <!-- BEGIN #checkout-cart -->
+        <div class="section-container" id="checkout-cart">
+            <!-- BEGIN container -->
+            <div class="container">
+                <!-- BEGIN checkout -->
+                <div class="checkout">
+                    <form action="checkout_info.html" method="POST" name="form_checkout">
+                        <!-- BEGIN checkout-header -->
+                        <div class="checkout-header">
+                            <!-- BEGIN row -->
+                            <div class="row">
+                                <!-- BEGIN col-3 -->
+                                <div class="col-md-3 col-sm-3">
+                                    <div class="step active">
+                                        <a href="{% url 'showcart' %}">
+                                            <div class="number">1</div>
+                                            <div class="info">
+                                                <div class="title">Delivery Options</div>
+                                                <div class="desc">Lorem ipsum dolor sit amet.</div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                                <!-- END col-3 -->
+                                <!-- BEGIN col-3 -->
+                                <div class="col-md-3 col-sm-3">
+                                    <div class="step active">
+                                        <a href="{% url 'checkoutinfo' %}">
+                                            <div class="number">2</div>
+                                            <div class="info">
+                                                <div class="title">Shipping Address</div>
+                                                <div class="desc">Vivamus eleifend euismod.</div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                                <!-- END col-3 -->
+                                <!-- BEGIN col-3 -->
+                                <div class="col-md-3 col-sm-3">
+                                    <div class="step active">
+                                        <a href="{% url 'payment' %}">
+                                            <div class="number">3</div>
+                                            <div class="info">
+                                                <div class="title">Payment</div>
+                                                <div class="desc">Aenean ut pretium ipsum. </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                                <!-- END col-3 -->
+                                <!-- BEGIN col-3 -->
+                                <div class="col-md-3 col-sm-3">
+                                    <div class="step active">
+                                        <a href="{% url 'paymentcomplete' %}">
+                                            <div class="number">4</div>
+                                            <div class="info">
+                                                <div class="title">Complete Payment</div>
+                                                <div class="desc">Curabitur interdum libero.</div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                                <!-- END col-3 -->
+                            </div>
+                            <!-- END row -->
+                        </div>
+                        <!-- END checkout-header -->

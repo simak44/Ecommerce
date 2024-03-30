@@ -1,0 +1,35 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block content %}
+<h2>Welcome {{request.user}}</h2>
+<!-- BEGIN category-item -->
+<h3>This is your Cart List:</h3>
+<div class="category-item list">
+    {% for item in item %}
+    <!-- BEGIN item-row -->
+    <div class="item-row">
+        <!-- BEGIN item -->
+        <div class="item item-thumbnail">
+            <a href="{% url 'product_detail' item.id %}" class="item-image">
+                <img src="{{item.productid.product_image.url}}" alt="" />
+                <div class="discount">0% OFF</div>
+            </a>
+            <div class="item-info">
+                <h4 class="item-title">
+                    <a href="{% url 'product_detail' item.id %}">{{item.productid.title}}<br /></a>
+                </h4>
+                <p class="item-desc">{{item.productid.discription}}</p>
+                <div class="item-price">{{item.productid.discounted_price}}</div>
+                <div class="item-discount-price">{{item.productid.actual_price}}</div>
+                <div>Quantity: {{item.quantity}}</div>
+            </div>
+        </div>
+        <!-- END item -->
+
+    {% endfor %}
+    
+</div>
+
+<!-- END category-item -->
+
+{% endblock content %}

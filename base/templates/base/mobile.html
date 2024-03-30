@@ -1,0 +1,60 @@
+{% extends "base/index.html" %}
+{% load static %}
+{% block content2 %}
+               <!-- BEGIN category-detail -->
+               <div class="category-detail">
+                   <!-- BEGIN category-item -->
+                   <a href="#" class="category-item full">
+                       <div class="item">
+                           <div class="item-cover">
+                               <img src="{% static 'assets/img/samsung-s7-edge.jpg' %}" alt="" />
+                           </div>
+                           <div class="item-info bottom">
+                               <h4 class="item-title">Samsung Galaxy s7 Edge + Geat 360 + Gear VR</h4>
+                               <p class="item-desc">Redefine what a phone can do</p>
+                               <div class="item-price">$799.00</div>
+                           </div>
+                       </div>
+                   </a>
+                   <!-- END category-item -->
+               
+                   <!-- BEGIN category-item -->
+                   <div class="category-item list">
+                       <!-- BEGIN item-row -->
+                       {%for item in mobile %}
+                       <div class="item-row">
+                           <!-- BEGIN item -->
+                           <div class="item item-thumbnail">
+                               <a href="{% url 'product_detail' item.id %}" class="item-image">
+                                   <img src="{{item.product_image.url}}">
+                                   {% comment %} <img src="{%  "Iphone_12pro_77QjSU2.jpg" %}" alt=""> {% endcomment %}
+                                   <div class="discount">0% OFF</div>
+                               </a>
+                               <div class="item-info">
+                                   <h4 class="item-title">
+                                       {{item.title}}
+
+                                   </h4>
+                                   <p class="item-desc">{{item.discription}}</p>
+                                   <div class="item-price">{{item.actual_price}}</div>
+                                   <div class="item-discount-price">{{item.discounted_price}}</div>
+                               </div>
+                           </div>
+                           <!-- END item -->
+                       </div>
+                       <!-- END item-row -->
+                       {% endfor %}
+                       
+                   </div>
+                   <!-- END category-item -->
+               
+               </div>
+               <!-- END category-detail -->
+           </div>
+           <!-- END category-container -->
+       </div>
+       <!-- END container -->
+   </div>
+   <!-- END #mobile-list -->
+
+{% endblock content2 %}

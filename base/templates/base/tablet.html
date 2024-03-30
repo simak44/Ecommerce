@@ -1,0 +1,42 @@
+{% extends "base/index.html" %}
+{% load static %}
+{% block content3 %}
+                        <!-- BEGIN category-item -->
+                        <div class="category-item list">
+                            {% for item in tablet %}
+                            <!-- BEGIN item-row -->
+                            <div class="item-row">
+                                <!-- BEGIN item -->
+                                <div class="item item-thumbnail">
+                                    <a href="{% url 'product_detail' item.id %}" class="item-image">
+                                        <img src="{{item.product_image.url}}" alt="" />
+                                        <div class="discount">0% OFF</div>
+                                    </a>
+                                    <div class="item-info">
+                                        <h4 class="item-title">
+                                            <a href="{% url 'product_detail' item.id %}">{{item.title}}<br /></a>
+                                        </h4>
+                                        <p class="item-desc">{{item.discription}}</p>
+                                        <div class="item-price">{{item.discounted_price}}</div>
+                                        <div class="item-discount-price">{{item.actual_price}}</div>
+                                    </div>
+                                </div>
+                                <!-- END item -->
+                        
+                            {% endfor %}
+                            
+                        </div>
+                    
+                        <!-- END category-item -->
+                    </div>
+                    <!-- END category-detail -->
+                </div>
+                <!-- END category-container -->
+            </div>
+            <!-- END container -->
+        </div>
+     </div>
+        <!-- END #tablet-list -->
+    </div>
+{% endblock content3 %}
+ 
