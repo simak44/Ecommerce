@@ -2257,6 +2257,9 @@ a:active {
 
 /* 12.15 Product Review Setting */
 
+
+
+
 .review + .review {
     margin-top: 25px;
     padding-top: 25px;
@@ -3844,3 +3847,4 @@ a.text-white:focus {
 .underline {
     border-bottom: 1px solid #e2e7eb !important;
 }
+

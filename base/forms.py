@@ -17,7 +17,7 @@ class ReviewForm(forms.ModelForm):
     class Meta:
         model = ReviewModel
         fields = [ 'name', 'title', 'review', 'rating']
-        exclude = ['username', 'titleproduct', 'date']
+        exclude = ['username', 'titleproduct', 'date', 'rating']
         labels = {
             'name':'Name',
             'title': 'Title',

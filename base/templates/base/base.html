@@ -23,6 +23,7 @@
 	
 	<!-- ================== BEGIN BASE JS ================== -->
 	<script src="{% static 'assets/plugins/pace/pace.min.js' %}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 	<!-- ================== END BASE JS ================== -->
 
 
@@ -92,9 +93,9 @@
                     <div class="header-nav">
                         <div class=" collapse navbar-collapse" id="navbar-collapse">
                             <ul class="nav">
-                                <li class="active"><a href="index.html">Home</a></li>
+                                <li class="active"><a href="{% url 'index' %}">Home</a></li>
                                 <li class="dropdown dropdown-full-width dropdown-hover">
-                                    <a href="#" data-toggle="dropdown">
+                                    <a href="{% url 'index' %}" data-toggle="dropdown">
                                         Our Store 
                                         <i class="fa fa-angle-down"></i>
                                         <span class="arrow top"></span>
@@ -199,7 +200,7 @@
                             <li class="dropdown dropdown-hover">
                                 <a href="#" class="header-cart" data-toggle="dropdown">
                                     <i class="fa fa-shopping-bag"></i>
-                                    <span class="total">2</span>
+                                    <span class="total">{{cart.count}}</span>
                                     {{request.user}}
                                     <span class="arrow top"></span>
                                 </a>
@@ -208,50 +209,31 @@
                                 
                                 <div class="dropdown-menu dropdown-menu-cart p-0">
                                     <div class="cart-header">
-                                        <h4 class="cart-title">Shopping Bag (1) </h4>
+                                        <h4 class="cart-title">Shopping Bag ({{cart.count}}) </h4>
                                         
                                     </div>
                                     
                                     <div class="cart-body">
                                         
                                         <ul class="cart-item">
-                                            
+                                            {% for item in cart %}
                                             <li>
-                                                <div class="cart-item-image"><img src="{% static 'assets/img/ipad.jpg' %}" alt="" /></div>
+                                                <div class="cart-item-image"><img src="{{item.productid.product_image.url}}" alt="" /></div>
                                                 <div class="cart-item-info">
-                                                    <h4>iPad Pro Wi-Fi 128GB - Silver</h4>
-                                                    <p class="price">$699.00</p>
+                                                    <h4>{{item.productid.titleproduct}}</h4>
+                                                    <p class="price">${{item.productid.discounted_price}}</p>
                                                 </div>
                                                 <div class="cart-item-close">
                                                     <a href="#" data-toggle="tooltip" data-title="Remove">&times;</a>
                                                 </div>
                                             </li>
-                                            <li>
-                                                <div class="cart-item-image"><img src="{% static 'assets/img/imac.jpg' %}" alt="" /></div>
-                                                <div class="cart-item-info">
-                                                    <h4>21.5-inch iMac</h4>
-                                                    <p class="price">$1299.00</p>
-                                                </div>
-                                                <div class="cart-item-close">
-                                                    <a href="#" data-toggle="tooltip" data-title="Remove">&times;</a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="cart-item-image"><img src="{% static 'assets/img/iphone.png' %}" alt="" /></div>
-                                                <div class="cart-item-info">
-                                                    <h4>iPhone 6s 16GB - Silver</h4>
-                                                    <p class="price">$649.00</p>
-                                                </div>
-                                                <div class="cart-item-close">
-                                                    <a href="#" data-toggle="tooltip" data-title="Remove">&times;</a>
-                                                </div>
-                                            </li>
+                                            {% endfor %}
                                         </ul>
                                     </div>
                                     <div class="cart-footer">
                                         <div class="row row-space-10">
                                             <div class="col-xs-6">
-                                                <a href="{% url 'showcart' %}" class="btn btn-default btn-block">View Cart</a>
+                                                <a href="{% url 'showcart' %}" class="btn btn-inverse btn-block">View Cart</a>
                                             </div>
                                             <div class="col-xs-6">
                                                 <a href="checkout_cart.html" class="btn btn-inverse btn-block">Checkout</a>
@@ -550,6 +532,7 @@
     <script src="assets/crossbrowserjs/excanvas.min.js"></script>
 <![endif]-->
 <script src="{% static 'assets/plugins/jquery-cookie/jquery.cookie.js' %}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="{% static 'assets/js/apps.min.js' %}"></script>
 <!-- ================== END BASE JS ================== -->
 

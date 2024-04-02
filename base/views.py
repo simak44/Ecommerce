@@ -32,6 +32,7 @@ class IndexView(TemplateView):
         context['tablet'] = ProductModel.objects.filter(p_category__category = 'Tablet')
         context['brand'] = BrandModel.objects.all( )
         context['category'] = CategoryModel.objects.all()
+        context['cart'] = CartModel.objects.filter(username=self.request.user)
         return context
     
 class ShowAllView(ListView):
@@ -41,6 +42,7 @@ class ShowAllView(ListView):
       context =  super().get_context_data(**kwargs)
       context['brand'] = BrandModel.objects.all( )
       context['category'] = CategoryModel.objects.all()
+      context['cart'] = CartModel.objects.filter(username=self.request.user)
       kwrd = self.kwargs['p_brand']
       print(kwrd)
       # if kwrd== 'p_category':
@@ -96,6 +98,7 @@ class TabletView(TemplateView):
         context['feature'] = ProductModel.objects.filter(is_featured = True)
         context['brand'] = BrandModel.objects.all( )
         context['category'] = CategoryModel.objects.all()
+        context['cart'] = CartModel.objects.filter(username=self.request.user)
       #   print(context['brand'] )
         tab = self.kwargs['hp']
         if tab == 'samsung':
@@ -118,6 +121,7 @@ class MobileView(TemplateView):
         context['feature'] = ProductModel.objects.filter(is_featured = True)
         context['brand'] = BrandModel.objects.all( )
         context['category'] = CategoryModel.objects.all()
+        context['cart'] = CartModel.objects.filter(username=self.request.user)
         tab = self.kwargs['brand']
         if tab == 'samsung':
          context['mobile'] = ProductModel.objects.filter(p_brand__brand = 'Samsung' , p_category__category = 'MobilePhones')
@@ -139,10 +143,14 @@ class ProductDetailView(DetailView, FormView):
        return reverse_lazy('product_detail', kwargs={'pk': id})
    
     def form_valid(self, form):
+       rate = self.request.POST.get('rate')
+       print("rate: >>>",rate)
+       print("Type rate: >>>",type(rate))
        event = form.save(commit=False)
        event.username = self.request.user
+       event.rating= int(rate)
        event.titleproduct_id= self.kwargs['pk']
-       print(event.titleproduct)
+      #  print(event.titleproduct)
        event.save()
        return super().form_valid(form)
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
@@ -154,6 +162,7 @@ class ProductDetailView(DetailView, FormView):
        context['review']= ReviewModel.objects.filter(titleproduct = id)
        context['short']= ProductShortDescriptionModel.objects.filter(productname=id)
        context['info']= AdditionalInformationModel.objects.filter(productname=id)
+       context['cart'] = CartModel.objects.filter(username=self.request.user)
        return context
 
 
@@ -172,6 +181,7 @@ class AccountView(TemplateView):
       context =  super().get_context_data(**kwargs)
       context['category'] = CategoryModel.objects.all()
       context['brand'] = BrandModel.objects.all( )
+      context['cart'] = CartModel.objects.filter(username=self.request.user)
       return context
       
 
@@ -197,6 +207,7 @@ class AddtocartView(View):
        context = super().get_context_data(**kwargs)
        context['category'] = CategoryModel.objects.all()
        context['brand'] = BrandModel.objects.all( )
+       context['cart'] = CartModel.objects.filter(username=self.request.user)
        return context
    
 class RemoveformCart(View): 
@@ -219,6 +230,7 @@ class RemoveformCart(View):
        context = super().get_context_data(**kwargs)
        context['category'] = CategoryModel.objects.all()
        context['brand'] = BrandModel.objects.all( )
+       context['cart'] = CartModel.objects.filter(username=self.request.user)
        return context
 
 
@@ -241,6 +253,7 @@ class ShowCartView(TemplateView):
          total_with_shipping = abc + shipping_charges
       context =super().get_context_data(**kwargs)
       context['brand'] = BrandModel.objects.all( )
+      context['cart'] = CartModel.objects.filter(username=self.request.user)
       context['category'] = CategoryModel.objects.all()
       context = {'item':items, 'total_price':abc, 'total_with_shipping':total_with_shipping}
       return context

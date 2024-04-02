@@ -1,7 +1,7 @@
 {% extends "base/base.html" %}
 {% load static %}
 {% block productdetail %}
-        
+    
         <!-- BEGIN #product -->
         <div id="product" class="section-container p-t-20">
             <!-- BEGIN container -->
@@ -44,7 +44,7 @@
                         <div class="product-info">
                             <!-- BEGIN product-info-header -->
                             <div class="product-info-header">
-                                <h1 class="product-title"><span class="label label-success">41% OFF</span> {{object.title}} </h1>
+                                <h1 class="product-title"><span class="label label-success">41% OFF</span> {{object.titleproduct}} </h1>
                                 <ul class="product-category">
                                     <li><a href="#">{{object.}}</a></li>
                                     <li>/</li>
@@ -107,7 +107,7 @@
                         <ul id="product-tab" class="nav nav-tabs">
                             <li class="active"><a href="#product-desc" data-toggle="tab">Product Description</a></li>
                             <li class=""><a href="#product-info" data-toggle="tab">Additional Information</a></li>
-                            <li class=""><a href="#product-reviews" data-toggle="tab">Rating & Reviews (5)</a></li>
+                            <li class=""><a href="#product-reviews" data-toggle="tab">Rating & Reviews ({{review.count}})</a></li>
                         </ul>
                         <!-- END #product-tab -->
                         <!-- BEGIN #product-tab-content -->
@@ -225,6 +225,13 @@
                                                 <div class="review-icon"><img src="{% static 'assets/img/user-1.jpg' %}" alt="" /></div>
                                                 <div class="review-rate">
                                                     <ul class="review-star">
+                                                        {% comment %} <div class="review">
+                                                            <label for="star-1" > <input type="radio" id="star-1" name="rate" value="1" /><i class="fa fa-star"></i></label>
+                                                             <label for="star-2" ><input type="radio" id="star-2" name="rate" value="2" /><i class="fa fa-star"></i></label>
+                                                             <label for="star-3" ><input type="radio" id="star-3" name="rate" value="3" /><i class="fa fa-star"></i></label>
+                                                             <label for="star-4" ><input type="radio" id="star-4" name="rate" value="4" /><i class="fa fa-star"></i></label>
+                                                             <label for="star-5" ><input type="radio" id="star-5" name="rate" value="5" /><i class="fa fa-star"></i></label>
+                                                         </div> {% endcomment %}
                                                         {{item.rating}}/5
                                                     </ul>
                                             
@@ -248,13 +255,80 @@
                                     <div class="col-md-5">
                                         <!-- BEGIN review-form -->
                                         <div class="review-form">
-                                            <form method="post">
+                                            <form method="post" name="review_form">
                                                 {% csrf_token %}
                                                 <h2>Write a review</h2>
                                                 {% comment %} {% for fm  in form  %}
                                                 {{fm.label_tags}} {{fm}}
                                                 {% endfor %} {% endcomment %}
                                                                 {{form.as_p}}
+                                                              <style>
+                                                                .review label {
+                                                                    color:white;
+                                                                    font-size: 25px;
+                                                                    text-shadow: 2px 2px 7px grey;
+                                                                    border: 10px;
+                                                                }
+                                                                .review label:hover{
+                                                                    color:yellow
+                                                                }
+                                                                .review label.active, .review label.secondary-active{
+                                                                    color:yellow
+                                                                }
+                                                                
+                                                                .review input[type="radio"]{
+                                                                    display: none;
+                                                                } 
+                                        
+                                                              </style> 
+                                                        
+                                                               
+{% comment %}                                            
+                                                            
+                                                        <div class="form-group">
+                                                            <div class="rating">
+                                                                    <p class="text-uppercase font-weight-bold">Your Rating: </p>
+                                                                <div class="review">
+                                                                <ul>
+                                                                  <li> <label for="star-1" > <input type="radio" id="star-1" name="rate" value="1" /><i class="fa fa-star"></i></label></li>
+                                                                </ul>
+                                                                </div>
+                                                            
+                                                            </div>
+                                                        </div>  {% endcomment %}
+                                                        <div class="form-group">
+                                                            <div class="rating">
+                                                                    <p class="text-uppercase font-weight-bold">Your Rating: </p>
+                                                                <div class="review">
+                                                                   <label for="star-1" > <input type="radio" id="star-1" name="rate" value="1" /><i class="fa fa-star"></i></label>
+                                                                    <label for="star-2" ><input type="radio" id="star-2" name="rate" value="2" /><i class="fa fa-star"></i></label>
+                                                                    <label for="star-3" ><input type="radio" id="star-3" name="rate" value="3" /><i class="fa fa-star"></i></label>
+                                                                    <label for="star-4" ><input type="radio" id="star-4" name="rate" value="4" /><i class="fa fa-star"></i></label>
+                                                                    <label for="star-5" ><input type="radio" id="star-5" name="rate" value="5" /><i class="fa fa-star"></i></label>
+                                                                </div>
+                                                            </div>
+                                                        </div> 
+                                                        {% comment %} <div class="form-group">
+                                                            <label for="email">Rating  <span class="text-danger">*</span></label>
+                                                            <div class="rating" data-rating="true" data-target="rating">
+                                                                <i class="fa fa-star-o" value="1"></i>
+                                                                <i class="fa fa-star-o" value="2"></i>
+                                                                <i class="fa fa-star-o" vlaue="3"></i>
+                                                                <i class="fa fa-star-o" value="4"></i>
+                                                                <i class="fa fa-star-o" value="5"></i>
+                                                                <span class="rating-comment">
+                                                                    <span class="rating-comment-tooltip">Click to rate</span>
+                                                                </span>
+                                                            </div>
+                                                            <select name="rating" id="rating" class="hide">
+                                                                <option value="1">1</option>
+                                                                <option value="2">2</option>
+                                                                <option value="3">3</option>
+                                                                <option value="4">4</option>
+                                                                <option value="5">5</option>
+                                                            </select>
+                                                        </div> 
+                                                         {% endcomment %}
                                                 <button type="submit" class="btn btn-inverse btn-lg">Submit Review</button>
                                             </form>
                                         </div>
@@ -271,6 +345,14 @@
                     <!-- END product-tab -->
                 </div>
                 <!-- END product -->
+                <script>
+                    $('label').click(function(e) {
+                        $('label').removeClass('active');
+                        $('label').removeClass('secondary-active');
+                        $(this).addClass('active');
+                        $(this).prevAll().addClass('secondary-active');
+                    });
+                </script>
                 {% comment %} {% endfor %} {% endcomment %}
                 <!-- BEGIN similar-product -->
                 <h4 class="m-b-15 m-t-30">You Might Also Like</h4>
