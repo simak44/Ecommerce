@@ -16,8 +16,8 @@ urlpatterns = [
     # path('samsung/', views.SamsungView.as_view(), name='samsung'),
 
     path('tab/<str:hp>/', views.TabletView.as_view(), name='tab'),
-    path('tab/<str:apple>/', views.TabletView.as_view(), name='tab'),
-    path('tab/<str:samsung>/', views.TabletView.as_view(), name='tab'),
+    # path('tab/<str:apple>/', views.TabletView.as_view(), name='tab'),
+    # path('tab/<str:samsung>/', views.TabletView.as_view(), name='tab'),
 
     path('product_detail/<int:pk>/', views.ProductDetailView.as_view(), name='product_detail'),
 

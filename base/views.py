@@ -1,7 +1,6 @@
 from typing import Any
 from django.urls import reverse_lazy
-from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse
+from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from django.views.generic.edit import CreateView
 from django.views import View
@@ -12,6 +11,7 @@ from .models import (ProductModel, CategoryModel, CustomerModel, AdditionalInfor
 from django.db.models.aggregates import Sum
 from django.utils.decorators import method_decorator
 from django.conf import settings
+import random
 import stripe
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -30,6 +30,9 @@ class IndexView(TemplateView):
         context['feature'] = ProductModel.objects.filter(is_featured = True)
         context['mobile'] = ProductModel.objects.filter(p_category__category = 'MobilePhones')
         context['tablet'] = ProductModel.objects.filter(p_category__category = 'Tablet')
+        rando = ProductModel.objects.all()
+        context['randoms'] = random.choices(rando, k=3)
+      #   print(randoms)   
         context['brand'] = BrandModel.objects.all( )
         context['category'] = CategoryModel.objects.all()
         context['cart'] = CartModel.objects.filter(username=self.request.user)
@@ -101,12 +104,8 @@ class TabletView(TemplateView):
         context['cart'] = CartModel.objects.filter(username=self.request.user)
       #   print(context['brand'] )
         tab = self.kwargs['hp']
-        if tab == 'samsung':
-         context['tablet'] = ProductModel.objects.filter(p_brand__brand = 'Samsung' , p_category__category = 'Tablet')
-        elif tab == 'hp' :
-         context['tablet'] = ProductModel.objects.filter(p_brand__brand = 'HP' , p_category__category = 'Tablet')
-        elif tab == 'apple':
-         context['tablet'] = ProductModel.objects.filter(p_brand__brand = 'Apple' , p_category__category = 'Tablet')
+        context['tablet'] = ProductModel.objects.filter(p_brand__brand = tab , p_category__category = 'Tablet')
+        print(context['tablet'])
         context['mobile'] = ProductModel.objects.filter(p_category__category = 'MobilePhones')
         return context
     
@@ -123,12 +122,7 @@ class MobileView(TemplateView):
         context['category'] = CategoryModel.objects.all()
         context['cart'] = CartModel.objects.filter(username=self.request.user)
         tab = self.kwargs['brand']
-        if tab == 'samsung':
-         context['mobile'] = ProductModel.objects.filter(p_brand__brand = 'Samsung' , p_category__category = 'MobilePhones')
-        elif tab == 'hp' :
-         context['mobile'] = ProductModel.objects.filter(p_brand__brand = 'HP' , p_category__category = 'MobilePhones')
-        elif tab == 'apple':
-         context['mobile'] = ProductModel.objects.filter(p_brand__brand = 'Apple' , p_category__category = 'MobilePhones')
+        context['mobile'] = ProductModel.objects.filter(p_brand__brand = tab , p_category__category = 'MobilePhones')
         context['tablet'] = ProductModel.objects.filter(p_category__category = 'Tablet')
         return context
         
@@ -144,18 +138,19 @@ class ProductDetailView(DetailView, FormView):
    
     def form_valid(self, form):
        rate = self.request.POST.get('rate')
-       print("rate: >>>",rate)
-       print("Type rate: >>>",type(rate))
        event = form.save(commit=False)
        event.username = self.request.user
        event.rating= int(rate)
        event.titleproduct_id= self.kwargs['pk']
-      #  print(event.titleproduct)
        event.save()
        return super().form_valid(form)
+       
+       
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
        context= super().get_context_data(**kwargs)
        id = self.kwargs['pk']
+       rate = self.request.POST.get('rate')
+       context['stars'] = rate
        context['category'] = CategoryModel.objects.all()
        context['brand'] = BrandModel.objects.all( )
        context['proddes']=ProductDescriptionModel.objects.get(id=id)
@@ -163,6 +158,7 @@ class ProductDetailView(DetailView, FormView):
        context['short']= ProductShortDescriptionModel.objects.filter(productname=id)
        context['info']= AdditionalInformationModel.objects.filter(productname=id)
        context['cart'] = CartModel.objects.filter(username=self.request.user)
+       
        return context
 
 
@@ -175,7 +171,7 @@ class ContactView(TemplateView):
 class IndexFixedHeaderView(TemplateView):
    template_name = 'base/index_fixed_header.html'
 
-class AccountView(TemplateView):
+class AccountView(TemplateView): 
    template_name = 'base/my_account.html'
    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
       context =  super().get_context_data(**kwargs)

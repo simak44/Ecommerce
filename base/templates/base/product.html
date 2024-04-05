@@ -63,7 +63,7 @@
                             </a>
                             <div class="item-info">
                                 <h4 class="item-title">
-                                    <a href="{% url 'product_detail' i.id %}">{{i.title}}<br />16GB</a>
+                                    <a href="{% url 'product_detail' i.id %}">{{i.titleproduct}}<br />16GB</a>
                                 </h4>
                                 <p class="item-desc">{{i.description}}</p>
                                 <div class="item-price">${{i.discounted_price|floatformat:2}}</div>
