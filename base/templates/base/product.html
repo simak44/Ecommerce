@@ -31,11 +31,11 @@
                     <!-- BEGIN row -->
                     <div class="row">
                         <div class="col-md-6">
-                            <h4>We found 65 Items for "Apple Product"</h4>
+                            <h4>We found <b>{{count}}</b> Items for <b>{{kwrd}}</b> Product</h4>
                         </div>
                         <!-- END col-6 -->
                         <!-- BEGIN col-6 -->
-                        <div class="col-md-6 text-right">
+                        {% comment %} <div class="col-md-6 text-right">
                             <ul class="sort-list">
                                 <li class="text"><i class="fa fa-filter"></i> Sort by:</li>
                                 <li class="active"><a href="#">Popular</a></li>
@@ -43,7 +43,7 @@
                                 <li><a href="#">Discount</a></li>
                                 <li><a href="#">Price</a></li>
                             </ul>
-                        </div>
+                        </div> {% endcomment %}
                         <!-- END col-6 -->
                     </div>
                     <!-- END row -->
@@ -83,13 +83,15 @@
                 <!-- BEGIN pagination -->
                 <div class="text-center">
                     <ul class="pagination m-t-0">
-                        <li class="disabled"><a href="javascript:;">Previous</a></li>
-                        <li class="active"><a href="javascript:;">1</a></li>
-                        <li><a href="javascript:;">2</a></li>
-                        <li><a href="javascript:;">3</a></li>
-                        <li><a href="javascript:;">4</a></li>
-                        <li><a href="javascript:;">5</a></li>
-                        <li><a href="javascript:;">Next</a></li>
+                        {% if page_obj.has_previous %}
+                        <li ><a href="?page={{page_obj.previous_page_number}}">Previous</a></li>
+                        {% endif %}
+                        {% if page_obj.number %}
+                        <li><a>Page {{page_obj.number}} of {{page_obj.paginator.num_pages}}</a></li>
+                        {% endif %}
+                        {% if page_obj.has_next %}
+                        <li><a href="?page={{page_obj.next_page_number}}">Next</a></li>
+                        {% endif %}
                     </ul>
                 </div>
                 <!-- END pagination -->
@@ -98,20 +100,21 @@
             <!-- BEGIN search-sidebar -->
             <div class="search-sidebar">
                 <h4 class="title">Filter By</h4>
-                {% comment %} <form action="{% url 'product' %}" method="POST" name="filter_form"> {% endcomment %}
+                <form action="{% url 'search' %}" method="GET" name="filter_form">
+                    {% comment %} {% csrf_token %} {% endcomment %}
                     <div class="form-group">
                         <label class="control-label">Keywords</label>
-                        <input type="text" class="form-control input-sm" name="keyword" value="Mobile Phones" placeholder="Enter Keywords" />
+                        <input type="text" class="form-control input-sm" name="keyword"  value="" placeholder="Enter Keywords" />
                     </div>
                     <div class="form-group">
                         <label class="control-label">Price</label>
                         <div class="row row-space-0">
                             <div class="col-md-5">
-                                <input type="number" class="form-control input-sm" name="price_from" value="10" placeholder="Price From" />
+                                <input type="number" class="form-control input-sm" name="price_from" value="" placeholder="Price From" />
                             </div>
                             <div class="col-md-2 text-center p-t-5 f-s-12 text-muted">to</div>
                             <div class="col-md-5">
-                                <input type="number" class="form-control input-sm" name="price_to" value="10000" placeholder="Price To" />
+                                <input type="number" class="form-control input-sm" name="price_to" value="" placeholder="Price To" />
                             </div>
                         </div>
                     </div>
@@ -119,7 +122,7 @@
                         <button type="submit" class="btn btn-sm btn-inverse"><i class="fa fa-search"></i> Filter</button>
                     </div>
                 </form>
-                <h4 class="title m-b-0">Categories</h4>
+                {% comment %} <h4 class="title m-b-0">Categories</h4>
                 <ul class="search-category-list">
                     <li><a href="#">iPhone <span class="pull-right">(10)</span></a></li>
                     <li><a href="#">Mac <span class="pull-right">(15)</span></a></li>
@@ -127,7 +130,7 @@
                     <li><a href="#">Watch <span class="pull-right">(4)</span></a></li>
                     <li><a href="#">TV <span class="pull-right">(6)</span></a></li>
                     <li><a href="#">Accessories <span class="pull-right">(38)</span></a></li>
-                </ul>
+                </ul> {% endcomment %}
             </div>
             <!-- END search-sidebar -->
         </div>

@@ -23,14 +23,12 @@
                         <div class="product-image">
                             <!-- BEGIN product-thumbnail -->
                             <div class="product-thumbnail">
+                                {% for img  in images  %}
                                 <ul class="product-thumbnail-list">
-                                    <li class="active"><a href="#" data-click="show-main-image" data-url="{% static 'assets/img/iphone-6s-plus-2.jpg' %}"><img src="assets/img/iphone-6s-plus-2.jpg' %}" alt="" /></a></li>
-                                    <li><a href="#" data-click="show-main-image" data-url="{% static 'assets/img/iphone-6s-plus-3.jpg' %}"><img src="assets/img/iphone-6s-plus-3.jpg' %}" alt="" /></a></li>
-                                    <li><a href="#" data-click="show-main-image" data-url="{% static 'assets/img/iphone-6s-plus-4.jpg' %}"><img src="assets/img/iphone-6s-plus-4.jpg' %}" alt="" /></a></li>
-                                    <li><a href="#" data-click="show-main-image" data-url="{% static 'assets/img/iphone-6s-plus-5.jpg' %}"><img src="assets/img/iphone-6s-plus-5.jpg' %}" alt="" /></a></li>
-                                    <li><a href="#" data-click="show-main-image" data-url="{% static 'assets/img/iphone-6s-plus-6.jpg' %}"><img src="assets/img/iphone-6s-plus-6.jpg' %}" alt="" /></a></li>
-                                    <li><a href="#" data-click="show-main-image" data-url="{% static 'assets/img/iphone-6s-plus-7.jpg' %}"><img src="assets/img/iphone-6s-plus-7.jpg' %}" alt="" /></a></li>
+                                    <li class="active"><a href="#" data-click="show-main-image" data-url="{{img.productimage.url}}"><img src="{{img.productimage.url}}" alt="" /></a></li>
+                                    {% comment %} <li class="active"><a href="#" data-click="show-main-image" data-url="{{img.image.url}}"><img src="{{img.image.url}}" alt="" /></a></li> {% endcomment %}
                                 </ul>
+                                {% endfor %}
                             </div>
                             <!-- END product-thumbnail -->
                             <!-- BEGIN product-main-image -->
@@ -44,7 +42,7 @@
                         <div class="product-info">
                             <!-- BEGIN product-info-header -->
                             <div class="product-info-header">
-                                <h1 class="product-title"><span class="label label-success">41% OFF</span> {{object.titleproduct}} </h1>
+                                <h1 class="product-title"> {{object.titleproduct}} </h1>
                                 <ul class="product-category">
                                     <li><a href="#">{{object.}}</a></li>
                                     <li>/</li>
@@ -89,7 +87,7 @@
                                 <div class="product-price">
                                     <div class="price">{{object.discounted_price}}</div>
                                 </div>
-                                <a href="{%  url 'addtocart' product_id=object.id %}">Add to Cart</a>
+                                <a href="{%  url 'addtocart' product_id=object.id %}" class="btn btn-success">Add to Cart</a>
 
                                 {% comment %} <form action="
                                     {% csrf_token %}

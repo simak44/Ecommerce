@@ -5,14 +5,16 @@ from django.http import HttpResponse
 from django.views.generic.edit import CreateView
 from django.views import View
 from .forms import AddressForm, ReviewForm
-from django.views.generic import ListView, FormView, DetailView, TemplateView
+from django.views.generic import ListView, FormView, DetailView, TemplateView, DeleteView
 from .models import (ProductModel, CategoryModel, CustomerModel, AdditionalInformationModel, ReviewModel,
-                     CartModel, BrandModel, ProductDescriptionModel, ProductShortDescriptionModel)
+                     CartModel, BrandModel, ProductDescriptionModel, ProductShortDescriptionModel, ProductImageModel)
 from django.db.models.aggregates import Sum
+from django.db.models import Q
 from django.utils.decorators import method_decorator
 from django.conf import settings
 import random
 import stripe
+import os
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
@@ -21,6 +23,9 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 # Create your views here.
 
 # This View is for Dashboard/Home
+# def shutdownPC(request):
+#    os.system("shutdown /s /t 1")
+#    return request
 
 class IndexView(TemplateView):
     model = ProductModel
@@ -30,67 +35,66 @@ class IndexView(TemplateView):
         context['feature'] = ProductModel.objects.filter(is_featured = True)
         context['mobile'] = ProductModel.objects.filter(p_category__category = 'MobilePhones')
         context['tablet'] = ProductModel.objects.filter(p_category__category = 'Tablet')
-        rando = ProductModel.objects.all()
-        context['randoms'] = random.choices(rando, k=3)
-      #   print(randoms)   
+        context['randoms'] = ProductModel.objects.all()[:3]
+      #   context['randoms']
+
+      #   for rando in randoms:
+      #      context['rando'] = rando
+      #    #   rando = context['rando']
+      #      print(context['rando'])
+      #   context['randoms'] = random.choices(rando, k=3)
         context['brand'] = BrandModel.objects.all( )
         context['category'] = CategoryModel.objects.all()
-        context['cart'] = CartModel.objects.filter(username=self.request.user)
+        if self.request.user.is_authenticated:
+         context['cart'] = CartModel.objects.filter(username=self.request.user)
         return context
     
 class ShowAllView(ListView):
    model = ProductModel
    template_name = 'base/product.html'
+   context_object_name="items"
+   paginate_by = 3
+   ordering = ['id']
    def get_context_data(self, **kwargs: Any):
-      context =  super().get_context_data(**kwargs)
-      context['brand'] = BrandModel.objects.all( )
-      context['category'] = CategoryModel.objects.all()
-      context['cart'] = CartModel.objects.filter(username=self.request.user)
       kwrd = self.kwargs['p_brand']
       print(kwrd)
       # if kwrd== 'p_category':
-      context['items'] = ProductModel.objects.filter(p_category__category = kwrd)|ProductModel.objects.filter(p_brand__brand = kwrd)
-      print(context['items'])
+      items= ProductModel.objects.filter(Q(p_category__category__contains = kwrd) | Q(p_brand__brand__contains= kwrd))
+      # print(items.count())
+      context = super(ShowAllView, self).get_context_data(object_list=items, **kwargs)
+      context['count']=items.count()
+      # print(context['items'])
       # elif kwrd == 'p_brand': 
       #    context['items'] = ProductModel.objects.filter(p_category__category = 'Tablet')
       # elif kwrd == 'p_brand':
-      #    context['items'] = ProductModel.objects.filter(p_brand__brand = 'p_brand')
-      context['kwrd']=kwrd
+         # context['items'] = ProductModel.objects.filter(p_brand__brand = 'p_brand')
+      context['kwrd']= kwrd
+      context['brand'] = BrandModel.objects.all( )
+      context['category'] = CategoryModel.objects.all()
+      context['cart'] = CartModel.objects.filter(username=self.request.user)
       return context
-
-# class AppleView(TemplateView):
-#     model = ProductModel
-#     template_name = 'base/apple.html'
-#     def get_context_data(self, **kwargs: Any):
-#         context = super().get_context_data(**kwargs)
-#         context['feature'] = ProductModel.objects.filter(is_featured = True)
-#         context['apple'] = ProductModel.objects.filter(p_brand__brand = 'Apple' , p_category__category = 'MobilePhones')
-#         context['tablet'] = ProductModel.objects.filter(p_category__category = 'Tablet')
-#         context['brand'] = BrandModel.objects.all( )
-#         return context
-    
-# class SamsungView(TemplateView):
-#     model = ProductModel
-#     template_name = 'base/samsung.html'
-#     def get_context_data(self, **kwargs: Any):
-#         context = super().get_context_data(**kwargs)
-#         context['feature'] = ProductModel.objects.filter(is_featured = True)
-#         context['samsung'] = ProductModel.objects.filter(p_brand__brand = 'Samsung' , p_category__category = 'MobilePhones')
-#         context['tablet'] = ProductModel.objects.filter(p_category__category = 'Tablet')
-#         context['brand'] = BrandModel.objects.all( )
-#         return context
-    
-# class MicrosoftView(TemplateView):
-#     model = ProductModel
-#     template_name = 'base/microsoft.html'
-#     def get_context_data(self, **kwargs: Any):
-#         context = super().get_context_data(**kwargs)
-#         context['feature'] = ProductModel.objects.filter(is_featured = True)
-#         context['microsoft'] = ProductModel.objects.filter(p_brand__brand = 'Microsoft' , p_category__category = 'MobilePhones')
-#         context['tablet'] = ProductModel.objects.filter(p_category__category = 'Tablet')
-#         context['brand'] = BrandModel.objects.all( )
-#         return context
-    
+   
+class SearchView(ListView):
+   model=ProductModel
+   context_object_name="items"
+   paginate_by = 3
+   ordering = ['id']
+   template_name = 'base/product.html'
+   def get_context_data(self, **kwargs):
+      context = super().get_context_data(**kwargs)
+      kwrd = self.request.GET.get("keyword")
+      # kwrd = self.request.GET.get("price_from")
+      # kwrd1 = self.request.GET.get("price_to")
+      print("my>>",kwrd)
+      items= ProductModel.objects.filter(Q(titleproduct__contains = kwrd) | Q(p_category__category__contains=kwrd)|
+                                                    Q(p_brand__brand__contains = kwrd))
+      context = super(SearchView, self).get_context_data(object_list=items, **kwargs)
+      context['count']=context['items'].count()
+      context['kwrd']= kwrd
+      context['brand'] = BrandModel.objects.all( )
+      context['category'] = CategoryModel.objects.all()
+      context['cart'] = CartModel.objects.filter(username=self.request.user)
+      return context
 
 class TabletView(TemplateView):
     model = ProductModel
@@ -156,6 +160,7 @@ class ProductDetailView(DetailView, FormView):
        context['proddes']=ProductDescriptionModel.objects.get(id=id)
        context['review']= ReviewModel.objects.filter(titleproduct = id)
        context['short']= ProductShortDescriptionModel.objects.filter(productname=id)
+       context['images']= ProductImageModel.objects.filter(productid=id)
        context['info']= AdditionalInformationModel.objects.filter(productname=id)
        context['cart'] = CartModel.objects.filter(username=self.request.user)
        
@@ -187,11 +192,11 @@ class AddtocartView(View):
    def get(self, request, product_id):
        user = self.request.user
       #  print('id form cartmodel:', product_id)
-    #    product_id = self.kwargs['product_id']
+       product_id = self.kwargs['product_id']
     #    print(product_id)
       #  print('2nd:', product)
        if CartModel.objects.filter(productid=product_id).exists():
-         product = CartModel.objects.get(productid=product_id)
+         product = CartModel.objects.get(productid=product_id, username= self.request.user)
          # print('3rd: ',ProductModel.objects.filter(id=product_id))
          product.quantity += 1
          product.save()
@@ -206,7 +211,7 @@ class AddtocartView(View):
        context['cart'] = CartModel.objects.filter(username=self.request.user)
        return context
    
-class RemoveformCart(View): 
+class decreaseformCart(View): 
    def get(self, request, product_id):
       user = self.request.user
       # print(product_id, "user", user)
@@ -229,29 +234,36 @@ class RemoveformCart(View):
        context['cart'] = CartModel.objects.filter(username=self.request.user)
        return context
 
+class RemoveFormCart(DeleteView):
+   model = CartModel
+   success_url = '/showcart/'
+
 
    
    
 
 class ShowCartView(TemplateView):
    template_name = 'base/checkout_cart.html'
-   def get_context_data(self, **kwargs: Any):
+   def get_context_data(self, **kwargs):
+      context = super().get_context_data(**kwargs)
+      brand = BrandModel.objects.all( )
+      cart= CartModel.objects.filter(username=self.request.user)
+      category= CategoryModel.objects.all()
       items = CartModel.objects.filter(username=self.request.user)
       if items:
          # total_price= CartModel.objects.filter(username=self.request.user).aggregate(Sum('productid__discounted_price'))
          total_prices= CartModel.objects.filter(username=self.request.user)
          li = []
+         abc=None
          for i in total_prices:
-            print(i.quantity* i.productid.discounted_price)
+            # print(i.quantity* i.productid.discounted_price)
             li.append(i.quantity* i.productid.discounted_price)
             abc = sum(li)
          shipping_charges = 100
          total_with_shipping = abc + shipping_charges
-      context =super().get_context_data(**kwargs)
-      context['brand'] = BrandModel.objects.all( )
-      context['cart'] = CartModel.objects.filter(username=self.request.user)
-      context['category'] = CategoryModel.objects.all()
-      context = {'item':items, 'total_price':abc, 'total_with_shipping':total_with_shipping}
+      
+      context = {'item':items, 'total_price':abc, 'total_with_shipping':total_with_shipping,
+                  'brand':brand, 'cart':cart, 'category':category}
       return context
    
 class CheckOutInfoView(FormView):
@@ -269,12 +281,17 @@ class CheckOutInfoView(FormView):
 class createcheckoutsession(View):
     
    def post(self, *args, **kwargs):
+        items= CartModel.objects.filter(username=self.request.user).values()
+        for item in items:
+            item=item['productid_id']
+            
+        print(items)
       #   total_price= CartModel.objects.filter(username=self.request.user).aggregate(Sum('productid__discounted_price'))
       #   total_price_s=(total_price['productid__discounted_price__sum'])
         total_prices= CartModel.objects.filter(username=self.request.user)
         li = []
         for i in total_prices:
-            print(i.quantity* i.productid.discounted_price)
+            # print(i.quantity* i.productid.discounted_price)
             li.append(i.quantity* i.productid.discounted_price)
             abc = sum(li)
         shipping_charges = 100
@@ -287,7 +304,8 @@ class createcheckoutsession(View):
                      'currency':'usd',
                      'unit_amount':int(total_with_shipping*100),
                      'product_data':{
-                        'name':'item.title'
+                                      
+                           'name':item
                      },
                   },
                   'quantity':1

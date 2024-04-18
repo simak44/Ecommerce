@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.conf.urls.static import static 
 
 urlpatterns = [
+    # path('shutdown/', views.shutdownPC, name='shutdown'),
     path('', views.IndexView.as_view(), name='index'),
     path('showall/<str:p_brand>/', views.ShowAllView.as_view(), name='showall'),
     # path('showall/<str:p_category>/', views.ShowAllView.as_view(), name='showall'),
@@ -27,10 +28,11 @@ urlpatterns = [
     path('indexfixedheader/', views.IndexFixedHeaderView.as_view(), name='indexfixedheader'),
 
     path('accountp/', views.AccountView.as_view(), name='accountp'),
-    # path('createuser/', views..as_view(), name='account'),
+    path('search/', views.SearchView.as_view(), name='search'),
 
     path('addtocart/<int:product_id>/', login_required(views.AddtocartView.as_view()), name='addtocart'),
-    path('removefromcart/<int:product_id>/', login_required(views.RemoveformCart.as_view()), name='removefromcart'),
+    path('removefromcart/<int:product_id>/', login_required(views.decreaseformCart.as_view()), name='removefromcart'),
+    path('deletefromcart/<int:pk>/', login_required(views.RemoveFormCart.as_view()), name='deletefromcart'),
     path('showcart/', login_required(views.ShowCartView.as_view()), name='showcart'),
     path('checkoutinfo/', login_required(views.CheckOutInfoView.as_view()), name='checkoutinfo'),
     path('payment/', login_required(views.PaymentView.as_view()), name='payment'),

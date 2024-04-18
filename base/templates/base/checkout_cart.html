@@ -1,4 +1,4 @@
-{% extends "base/base.html" %}
+{% extends 'base/base.html' %}
 {% load static %}
 
 {% block content %} 
@@ -8,7 +8,7 @@
             <div class="container">
                 <!-- BEGIN checkout -->
                 <div class="checkout">
-                    <form action="checkout_info.html" method="POST" name="form_checkout">
+                    {% comment %} <form action="checkout_info.html" method="POST" name="form_checkout"> {% endcomment %}
                        {% include "base/checkoutheader.html" %}
                         <!-- BEGIN checkout-body -->
                         <div class="checkout-body">
@@ -37,7 +37,11 @@
                                                     <div class="desc">Delivers Tue 26/04/2016 - Free</div>
                                                 </div>
                                             </td>
-                                            <td><a href="{% url 'removefromcart' item.productid %}" class="btn btn-inverse btn-lg">Remove</a></td>
+                                            <td><form action="{% url 'deletefromcart' item.id %}" method="post">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-primary">Delete</button>
+                                                </form>
+                                            </td>
                                             <td class="cart-price text-center">{{item.productid.discounted_price}}
                                             </td>
                                             <td class="cart-qty text-center">
@@ -78,7 +82,7 @@
                                 </table>
                             </div>
                         </div>
-                    </form>
+                    {% comment %} </form> {% endcomment %}
                         <!-- END checkout-body -->
                         <!-- BEGIN checkout-footer -->
                         <div class="checkout-footer">

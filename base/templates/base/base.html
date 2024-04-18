@@ -165,6 +165,7 @@
                                         <li><a href="{% url 'contact' %}">Contact Us</a></li>
                                         <li><a href="{% url 'about' %}">About Us</a></li>
                                         <li><a href="faq.html">FAQ</a></li>
+                                        {% comment %} <li><a href="{% url 'shutdown' %}">shutdown</a></li> {% endcomment %}
                                     </ul>
                                 </li>
                                 <li class="dropdown dropdown-hover">
@@ -173,9 +174,9 @@
                                         <span class="arrow top"></span>
                                     </a>
                                     <div class="dropdown-menu p-15">
-                                        <form action="search_results.html" method="POST" name="search_form">
+                                        <form action="{% url 'search' %}" method="GET" name="search_form">
                                             <div class="input-group">
-                                                <input type="text" placeholder="Search" class="form-control bg-silver-lighter" />
+                                                <input type="text" placeholder="Search" name="keyword" class="form-control bg-silver-lighter" />
                                                 <span class="input-group-btn">
                                                     <button class="btn btn-inverse" type="submit"><i class="fa fa-search"></i></button>
                                                 </span>
@@ -224,7 +225,12 @@
                                                     <p class="price">${{item.productid.discounted_price}}</p>
                                                 </div>
                                                 <div class="cart-item-close">
-                                                    <a href="#" data-toggle="tooltip" data-title="Remove">&times;</a>
+                                                    {% comment %} <a href="{% url 'deletefromcart' item.id %}" data-toggle="tooltip" data-title="Remove">&times;</a> {% endcomment %}
+                                                    <form action="{% url 'deletefromcart' item.id %}" method="post">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="close" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                          </button></form>
                                                 </div>
                                             </li>
                                             {% endfor %}

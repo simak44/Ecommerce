@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import (ProductModel, CategoryModel, BrandModel, AdditionalInformationModel, ReviewModel,
-                     CustomerModel, CartModel, ProductDescriptionModel, ProductShortDescriptionModel)
+                     CustomerModel, CartModel, ProductDescriptionModel, ProductShortDescriptionModel, ProductImageModel)
 # Register your models here.
 @admin.register(ProductModel)
 class ProductAdmin(admin.ModelAdmin):
@@ -31,6 +31,10 @@ class ProductDescriptionAdmin(admin.ModelAdmin):
 @admin.register(ProductShortDescriptionModel)
 class ShortDescriptionAdmin(admin.ModelAdmin):
     list_display = ['id', 'productname', 'description']
+
+@admin.register(ProductImageModel)
+class ProductImageAdmin(admin.ModelAdmin):
+    list_display = ['id', 'productid', 'productimage']
 
 @admin.register(AdditionalInformationModel)
 class AdditionalInfoAdmin(admin.ModelAdmin):

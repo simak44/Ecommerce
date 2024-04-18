@@ -15,6 +15,7 @@ class BrandModel(models.Model):
         return self.brand
 
 
+
 class ProductModel(models.Model):
     titleproduct = models.CharField(max_length=100)
     discription = models.CharField(max_length=100)
@@ -29,7 +30,11 @@ class ProductModel(models.Model):
     # def __str__(self):
     #     return f'{self.id},{self.titleproduct}'
    
-        
+class ProductImageModel(models.Model):
+    productid = models.ForeignKey(ProductModel, on_delete=models.CASCADE)
+    productimage = models.ImageField(upload_to='productimg')
+
+
 class CustomerModel(models.Model):
     username = models.ForeignKey(User, on_delete = models.CASCADE)
     fname = models.CharField(max_length=100)
